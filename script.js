@@ -88,41 +88,33 @@ function displayMovies(list, containerId) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
 
-  list.forEach(movie => {
+  list.forEach(item => {
     const card = document.createElement('div');
     card.className = 'movie-card';
     card.innerHTML = `
-      <img src="${movie.thumbnail}" alt="${movie.title}" />
-      <h3>${movie.title}</h3>
+      <img src="${item.thumbnail}" alt="${item.title}" />
+      <h3>${item.title}</h3>
     `;
     card.addEventListener('click', () => {
-      openIframeVideo(movie.video);
-    });
-    container.appendChild(card);
-  });
-}
-
-function displaySeries(list, containerId) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = '';
-
-  list.forEach(series => {
-    const card = document.createElement('div');
-    card.className = 'movie-card';
-    card.innerHTML = `
-      <img src="${series.thumbnail}" alt="${series.title}" />
-      <h3>${series.title}</h3>
-    `;
-    card.addEventListener('click', () => {
-      if (series.episodes) {
-        showEpisodeList(series.title, series.episodes);
+      if (item.episodes) {
+        showEpisodeList(item.title, item.episodes);
       } else {
-        openIframeVideo(series.video);
+        openIframeVideo(item.video);
       }
     });
     container.appendChild(card);
   });
 }
+
+function showEpisodeList(title, episodes) {
+  const modalContent = document.getElementById('modalContent');
+  let buttonsHTML = `<h2 style="text-align:center">${title}</h2><div class="episode-list">`;
+
+  episodes.forEach(ep => {
+    const epType = ep.type || 'iframe';
+    buttonsHTML += `<button onclick="playEpisode('${ep.video}', '${epType}')">${ep.title}</button>`;
+  });
+
   buttonsHTML += '</div>';
 
   modalContent.innerHTML = `
