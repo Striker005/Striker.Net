@@ -88,33 +88,41 @@ function displayMovies(list, containerId) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
 
-  list.forEach(item => {
+  list.forEach(movie => {
     const card = document.createElement('div');
     card.className = 'movie-card';
     card.innerHTML = `
-      <img src="${item.thumbnail}" alt="${item.title}" />
-      <h3>${item.title}</h3>
+      <img src="${movie.thumbnail}" alt="${movie.title}" />
+      <h3>${movie.title}</h3>
     `;
     card.addEventListener('click', () => {
-      if (item.episodes) {
-        showEpisodeList(item.title, item.episodes);
-      } else {
-        openIframeVideo(item.video);
-      }
+      openIframeVideo(movie.video);
     });
     container.appendChild(card);
   });
 }
 
-function showEpisodeList(title, episodes) {
-  const modalContent = document.getElementById('modalContent');
-  let buttonsHTML = `<h2 style="text-align:center">${title}</h2><div class="episode-list">`;
+function displaySeries(list, containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
 
-  episodes.forEach(ep => {
-    const epType = ep.type || 'iframe';
-    buttonsHTML += `<button onclick="playEpisode('${ep.video}', '${epType}')">${ep.title}</button>`;
+  list.forEach(series => {
+    const card = document.createElement('div');
+    card.className = 'movie-card';
+    card.innerHTML = `
+      <img src="${series.thumbnail}" alt="${series.title}" />
+      <h3>${series.title}</h3>
+    `;
+    card.addEventListener('click', () => {
+      if (series.episodes) {
+        showEpisodeList(series.title, series.episodes);
+      } else {
+        openIframeVideo(series.video);
+      }
+    });
+    container.appendChild(card);
   });
-
+}
   buttonsHTML += '</div>';
 
   modalContent.innerHTML = `
