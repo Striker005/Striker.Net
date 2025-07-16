@@ -78,13 +78,35 @@ const webSeries = [
   }
 ];
 
+// Modal elements
 const videoModal = document.getElementById('videoModal');
 const videoFrame = document.getElementById('videoFrame');
 const customPlayer = document.getElementById('customPlayer');
 const videoSource = document.getElementById('videoSource');
 const closeBtn = document.getElementById('closeBtn');
+const modalContent = document.getElementById('modalContent');
 
+// Show movie (no episodes)
 function displayMovies(list, containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+
+  list.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'movie-card';
+    card.innerHTML = `
+      <img src="${item.thumbnail}" alt="${item.title}" />
+      <h3>${item.title}</h3>
+    `;
+    card.addEventListener('click', () => {
+      openIframeVideo(item.video);
+    });
+    container.appendChild(card);
+  });
+}
+
+// Show series (with optional episodes)
+function displaySeries(list, containerId) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
 
@@ -107,7 +129,6 @@ function displayMovies(list, containerId) {
 }
 
 function showEpisodeList(title, episodes) {
-  const modalContent = document.getElementById('modalContent');
   let buttonsHTML = `<h2 style="text-align:center">${title}</h2><div class="episode-list">`;
 
   episodes.forEach(ep => {
@@ -170,5 +191,16 @@ closeBtn.addEventListener('click', () => {
   customPlayer.style.display = 'none';
 });
 
+// Search functionality
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.toLowerCase();
+  const filteredMovies = movies.filter(item => item.title.toLowerCase().includes(query));
+  const filteredSeries = webSeries.filter(item => item.title.toLowerCase().includes(query));
+  displayMovies(filteredMovies, 'movieGrid');
+  displaySeries(filteredSeries, 'seriesGrid');
+});
+
+// Load default
 displayMovies(movies, 'movieGrid');
-displayMovies(webSeries, 'seriesGrid');
+displaySeries(webSeries, 'seriesGrid');
